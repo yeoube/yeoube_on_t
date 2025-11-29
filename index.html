@@ -73,57 +73,60 @@
 
         .controls {
             display: flex;
-            gap: 15px;
+            gap: 10px; /* 버튼 간격 통일 */
             align-items: center;
         }
 
-        .option-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f3f4f6;
-            padding: 6px 12px;
-            border-radius: 12px;
-        }
-
-        .option-label {
-            font-size: 0.85rem;
-            color: var(--sub-text-color);
-            font-weight: 500;
-        }
-
-        select {
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid transparent;
-            font-family: var(--font-kr);
-            font-size: 0.9rem;
-            background: transparent;
-            cursor: pointer;
-            color: var(--text-color);
-            outline: none;
-        }
-        select:hover { background: rgba(0,0,0,0.05); }
-
-        .reset-btn-header {
+        /* [수정] 통일된 버튼/컨트롤 스타일 (.header-btn) */
+        .header-btn {
+            height: 38px; /* 높이 고정으로 통일감 부여 */
+            padding: 0 14px;
             background: white;
             border: 1px solid #e5e7eb;
-            padding: 6px 14px;
-            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             font-family: var(--font-kr);
             font-size: 0.85rem;
             font-weight: 500;
-            transition: all 0.2s ease;
-            border-radius: 8px;
             color: var(--sub-text-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            text-decoration: none;
+            outline: none;
         }
-        .reset-btn-header:hover {
-            border-color: var(--wrong-color);
-            color: var(--wrong-color);
-            background: #fef2f2;
+
+        .header-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        /* Select 박스 커스텀 (버튼 모양 흉내) */
+        .select-wrapper {
+            position: relative;
+            padding: 0 10px; /* 내부 여백 */
+        }
+        
+        .select-wrapper select {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+            cursor: pointer;
+            outline: none;
+            padding-left: 4px;
+        }
+        
+        .select-label {
+            font-size: 0.85rem;
+            color: inherit;
         }
 
         /* --- Cat Animation Area --- */
@@ -383,6 +386,95 @@
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+        /* Help Modal */
+        .help-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .help-modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .help-modal-content {
+            background: white;
+            padding: 40px 30px;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .help-modal-overlay.open .help-modal-content {
+            transform: translateY(0);
+        }
+
+        .help-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--sub-text-color);
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        
+        .help-close-btn:hover {
+            color: var(--wrong-color);
+        }
+
+        .help-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+        
+        .help-list li {
+            margin-bottom: 18px;
+            font-size: 1rem;
+            line-height: 1.6;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-color);
+            font-weight: 400;
+        }
+        
+        .help-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .help-title {
+            font-family: var(--font-en);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            text-align: center;
+        }
+
         @media (max-width: 600px) {
             .container { padding: 30px 20px; }
             .quote-display { font-size: 1.3rem; }
@@ -396,12 +488,11 @@
 
 <div class="container">
     <div class="header">
-        <!-- [수정] 타이틀 변경 -->
         <div class="title">여우비온 Type</div>
         <div class="controls">
-            <div class="option-group">
-                <!-- [수정] 라벨 변경 -->
-                <span class="option-label">문장 갯수</span>
+            <!-- 1. Goal (Select) -->
+            <div class="header-btn select-wrapper">
+                <span class="select-label">문장 갯수</span>
                 <select id="sentence-count-select" onchange="resetSession()">
                     <option value="10">10</option>
                     <option value="50">50</option>
@@ -409,11 +500,15 @@
                 </select>
             </div>
             
-            <button class="reset-btn-header" onclick="resetSession()">
+            <!-- 2. Restart Button -->
+            <button class="header-btn" onclick="resetSession()">
                 <span>↻</span> 다시 시작
             </button>
 
-            <!-- 영문 버튼 제거됨 -->
+            <!-- 3. Help Button -->
+            <button class="header-btn" onclick="openHelp()">
+                <span>?</span> 도움말
+            </button>
         </div>
     </div>
 
@@ -516,6 +611,19 @@
 
     <div class="toast" id="toast">Next Quote ✨</div>
 
+    <!-- 도움말 모달 -->
+    <div class="help-modal-overlay" id="help-modal" onclick="closeHelp(event)">
+        <div class="help-modal-content" onclick="event.stopPropagation()">
+            <button class="help-close-btn" onclick="closeHelp()">×</button>
+            <div class="help-title">Info</div>
+            <ul class="help-list">
+                <li>여우비온Type은 키보드와 관련된 명언 모음입니다. 그러나 명언이 아니라 헛소리 일수도 있어요ㅋㅋ</li>
+                <li>오타가 나면 여우비 캐릭터가 비를 맞아요. 비 맞지 않게 주의해주세요.</li>
+                <li>수정사항이나 추가하고 싶은 문장이 있다면 <br><span style="color:var(--primary-color)">yeoube_on@gmail.com</span> 으로 메일주세요!</li>
+            </ul>
+        </div>
+    </div>
+
     <div class="modal" id="result-modal">
         <h2>Session Complete</h2>
         <p>Avg WPM: <span id="final-wpm">0</span></p>
@@ -538,13 +646,13 @@
         "더러운 손으로 키보드를 만지는 것은 죄악이다.",
         "지금 먹으려는 그 과자, 키보드는 안 먹고 싶단다.",
         "일어나 출근해 돈 벌어서 키보드 사야지.",
-        "어쩌다 내가 커스텀 키보드를 시작했더라, 왜 그랬을까?",
+        "어쩌다 내가 커스텀 키보드를 시작했더라 왜 그랬을까?",
         "그만 자고 일어나 스테빌 잡아야지.",
         "조립할 키보드가 남아 있다는 것은 희망찬 내일이 있다는 것이다.",
-        "키보드 분명 하나만 사려 했는데 언제 이렇게 많아졌나 나도 모른다.",
+        "키보드는 하나인데 장패드는 왜 이렇게 많을까, 나도 모른다.",
         "오늘도 키보드 사려고 일하는지, 일하려고 키보드를 사는지 헷갈린다.",
         "통장 잔액은 비어가는데 책상 위 키보드는 늘어만 간다.",
-        "키보드는 꽉 찼는데 더 사면서 이건 또 다른 느낌이라고 변명한다.",
+        "키보드는 꽉 찼는데 아직도 “이건 또 다른 느낌이야”라고 변명한다.",
         "알루미늄 하우징을 샀으면, 그 무게만큼 책임도 진다.",
         "가스켓 구조를 알기 전으로는 다시 돌아갈 수 없다.",
         "스위치 윤활을 시작한 순간, 주말은 네 것이 아니다.",
@@ -584,10 +692,6 @@
         "키보드에 쓴 돈은 소비가 아니라 투자라고 우겨 본다.",
         "키보드를 정리하려다가, 결국 사진 찍어 자랑 준비 한다.",
         "지금 이 문장을 타이핑하는 너도 이미 키보드 골짜기에 빠져있다.",
-        "여우비온 유튜브에 좋아요나 하나 눌러야겠다.",
-        "혹시 여우비온 유튜브 아직 구독 안했다면 지금 그 키보드 맴매.",
-        "여우비온 유튜브에 좋아요나 하나 눌러야겠다.",
-        "혹시 여우비온 유튜브 아직 구독 안했다면 지금 그 키보드 맴매.",
         "여우비온 유튜브에 좋아요나 하나 눌러야겠다.",
         "혹시 여우비온 유튜브 아직 구독 안했다면 지금 그 키보드 맴매.",
         "시킨 거 없는데 택배가 오면 작년에 주문한 키보드다.",
@@ -642,9 +746,6 @@
         "키보드에 휴학은 있어도 졸업이란 없다.",
         "내 키보드 소리 어때? 라는 말은 사실 칭찬해줘 라는 뜻이다.",
         "이제 키보드 더 안 산다는 사람 치고 안 사는 사람 못봤다.",
-        "여우비온 채널 구독한 건 정말 잘한 일이다.",
-        "옷 살 돈으로 키보드 샀더니 나갈 때 입을 옷이 없네.",
-        "옷 살 돈으로 키보드 샀더니 나갈 때 입을 옷이 없네.",
         "여유 보강판 두 개 더 사봤자 리빌드 안 한다."
     ];
 
@@ -934,6 +1035,7 @@
             finishSession();
         } else {
             showToast();
+            // [수정] setTimeout 제거하여 즉시 실행 (입력 버퍼 문제 해결)
             updateProgressText();
             loadNextQuote();
         }
@@ -968,9 +1070,21 @@
         modal.classList.add('show');
     }
 
+    // [추가] 도움말 모달 제어 함수
+    function openHelp() {
+        document.getElementById('help-modal').classList.add('open');
+    }
+    
+    function closeHelp(event) {
+        // event가 없으면(X버튼 클릭) 그냥 닫기
+        // event가 있으면(배경 클릭), target 확인
+        if (!event || event.target.id === 'help-modal') {
+            document.getElementById('help-modal').classList.remove('open');
+        }
+    }
+
     resetSession();
 
 </script>
 </body>
 </html>
-
